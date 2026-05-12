@@ -1,0 +1,70 @@
+""" 
+Model configuration demonstration showing factual vs creative optimization.
+Demonstrates ADKs generate_content_config with different settings.
+"""
+
+from google.adk.agents.llm_agent import Agent
+from google.genai import types
+
+# Agent 1: Optimized for factual data extraction
+# uses low temperature for consistency, strict safety for accuracy 
+
+factual_agent = Agent(
+    model='gemini-3-flash-preview',
+    name='data_extractor',
+    description='Extracts factual information with high consistency',
+    instruction="""
+    You are a precise data extractor. 
+    Extract facts exactly as stated. Do not:
+    - Add information not present
+    - Make assumptions or inferences
+    - Use creative language  3
+    Be accurate, concise, and deterministic. 
+    """,
+    generate_content_config=types.GenerateContentConfig(
+        temperature=0.1, # very low temperature for factual consistency
+        max_output_tokens=500, 
+        top_p=0.8,
+        top_k=10,
+        safety_settings=[
+            types.SafetySetting(
+                category=types.HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
+                threshold=types.HarmBlockThreshold.BLOCK_LOW_AND_ABOVE
+            ),
+        ]
+    )
+)
+
+# Agent 2: Optimized for creative brainstorming
+# uses high temperature for creativity, Pro model for better ideas
+
+creative_agent = Agent(
+    model='gemini-3.1-pro-preview',
+    name='creative_brainstormer',
+    description='Generates creative ideas and explores possibilites',
+    instruction="""
+    You are a creative brainstorming partner. 
+    Generate innovative, diverse, and imaginative ideas. Feel free to:
+    - Think outside the box
+    - Combine unexpected concepts
+    - Explore unconventional approaches
+    Be creative, varied, and thought-provoking. 
+    """,
+    generate_content_config=types.GenerateContentConfig(
+        temperature=0.9, # high temperature for creativity
+        max_output_tokens=2000,
+        top_p=0.95,
+        top_k=40,
+        safety_settings=[
+            types.SafetySetting(
+                category=types.HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
+                threshold=types.HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE
+            ),
+        ]
+    )
+)
+
+# for adk web we'll use the factual agent as root agent 
+# switch to creative_agent to test different behavior 
+
+root_agent = creative_agent
