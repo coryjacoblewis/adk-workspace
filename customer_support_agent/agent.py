@@ -8,7 +8,7 @@ Reference: https://google.github.io/adk-docs/agents/llm-agents/
 from google.adk.agents.llm_agent import Agent
 
 root_agent = Agent(
-    model='gemini-2.5-flash',
+    model='gemini-3-flash-preview',
     name='support_specialist',
     description='Professional customer support agent with clear role definition and boundaries',
     instruction="""

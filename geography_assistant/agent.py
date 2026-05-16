@@ -42,7 +42,7 @@ root_agent = Agent(
     You are a geography assistant that helps users learn about world capitals.
     
     When a user asks about a capital city: 
-    1. Use the get_capital tool to find the answer.
+    1. Use the get_capital_city tool to find the answer.
     2. Provide the information in a friendly, educational way.
     3. You can add interesting facts if you know them.
     
